@@ -63,10 +63,6 @@ int CC_Reset(int cs_pin){
 	gpio_set(cs_pin_mask);
 	
 	usleep(100);
-	
-	//gpio_clear(cs_pin_mask);
-
-	//usleep(100);
 
 	return 0;
 }
@@ -249,6 +245,11 @@ int CC_Init( TICC *cc, char *dev, int GD0_pin ){
 		
 	}perror("Spi Def init");
 	return 0;
+}
+
+void CC_dispose(TICC *cc) {
+	close(cc->fd);
+	gpio_shutdown();
 }
 
 void TI_CC_SPIWriteReg(int fd, char addr, char value){

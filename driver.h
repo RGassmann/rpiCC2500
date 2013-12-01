@@ -55,6 +55,8 @@ char RFReceivePacket(TICC *cc, char *, char *);
 
 int CC_Init( TICC *cc, char *dev, int GD0_pin );
 
+void CC_dispose(TICC *cc);
+
 void TI_CC_SPIWriteReg(int fd, char addr, char value);
 
 void TI_CC_SPIWriteBurstReg(int fd, char addr, char *buffer, char count);

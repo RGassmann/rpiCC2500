@@ -70,7 +70,7 @@ int main(int argc, char ** argv) {
 	printf("BurstReg\n");
 	TI_CC_SPIWriteBurstReg(cc->fd, TI_CCxxx0_PATABLE, paTable, paTableLen);
 	printf("Strobe\n");
-	TI_CC_SPIStrobe(cc->fd, TI_CCxxx0_SRX);           // Initialize CCxxxx in RX mode.
+	//TI_CC_SPIStrobe(cc->fd, TI_CCxxx0_SRX);           // Initialize CCxxxx in RX mode.
 										// When a pkt is received, it will
 										// signal on GDO0
 	char rxBuffer[50];
@@ -78,26 +78,32 @@ int main(int argc, char ** argv) {
 	printf("Part No.: %d\n",TI_CC_SPIReadStatus(cc->fd, TI_CCxxx0_PARTNUM));
 	printf("Version No.: %d\n",TI_CC_SPIReadStatus(cc->fd, TI_CCxxx0_VERSION));
 	char len = 50;
-	while(1){  // for now send every 500ms a message and check for received packages
+	int j;
+	for(j=0;j<10;j++){  // for now send every 500ms a message and check for received packages
 		rxBuffer[0] =3;
 		rxBuffer[1] =0x01;
 		rxBuffer[2] =12;
 		rxBuffer[3] =rxBuffer[1]^rxBuffer[2]^0x01;
-		
+		printf("Send Package\n");
 		RFSendPacket(cc, rxBuffer, 4);
 		usleep(500000);
 		
-		len = 4;
-		
-		if(RFReceivePacket(cc, rxBuffer, &len)){
+		printf("Check for Package\n");
+		while(RFReceivePacket(cc, rxBuffer, &len)){
 				printf("Got A Package %d\n",len);
-				/*Receiveddata are stored in rxBuffer*/
-				/*Put some intelligence here*/
+				for(i =0; i< len; i++){
+						printf("%d ",rxBuffer[i]);
+				}
+				printf("\n");
+				//Receiveddata are stored in rxBuffer
+				//Put some intelligence here
+				len = 50;
 		}
 		
 	}
 
 	printf("exiting LOOP\n");
+	CC_dispose(cc);
 	free(cc);
 
 	return 0;
