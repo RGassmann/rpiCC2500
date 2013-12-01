@@ -78,7 +78,7 @@ int main(int argc, char ** argv) {
 	printf("Part No.: %d\n",TI_CC_SPIReadStatus(cc->fd, TI_CCxxx0_PARTNUM));
 	printf("Version No.: %d\n",TI_CC_SPIReadStatus(cc->fd, TI_CCxxx0_VERSION));
 	char len = 50;
-	int j;
+	int j,i;
 	for(j=0;j<10;j++){  // for now send every 500ms a message and check for received packages
 		rxBuffer[0] =3;
 		rxBuffer[1] =0x01;
