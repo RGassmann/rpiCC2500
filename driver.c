@@ -218,7 +218,7 @@ char RFReceivePacket(TICC *cc, char *rxBuffer, char *length){
 			*length = pktLen;                     // Return the actual size
 			TI_CC_SPIReadBurstReg(cc->fd, TI_CCxxx0_RXFIFO, status, 2);
 			// Read appended status bytes
-			return (char)(status[TI_CCxxx0_LQI_RX+1]&TI_CCxxx0_CRC_OK);// Return CRC_OK bit
+			return (char)(status[TI_CCxxx0_LQI_RX]&TI_CCxxx0_CRC_OK);// Return CRC_OK bit
 		}else{                                       
 			*length = pktLen;                     // Return the large size
 			TI_CC_SPIStrobe(cc->fd, TI_CCxxx0_SFRX);      // Flush RXFIFO
@@ -290,6 +290,11 @@ void TI_CC_SPIReadBurstReg(int fd, char addr, char *buffer, char count){
 		i++;
 	}
 	CC_SPI_Transfer( fd, txBuf, rxBuf, count+1);
+	i=0;
+	while(i<count){
+		buffer[i] = rxBuf[i+1];
+		i++;
+	}
 }
 
 // For status/strobe addresses, the BURST bit selects between status registers
