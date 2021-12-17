@@ -2,9 +2,9 @@
  * gpio.c:
  *	Access routines for the GPIO's on RPi.
  *	Parts of this code are borrowed from WiringPi and R42/pinokia - Luis Reis
- *	
  *
- *	
+ *
+ *
  **************************************************************
  * This file is part of rpiCC2500
  *
@@ -53,7 +53,7 @@
 // GPIO setup macros. Always use INP_GPIO(x) before using OUT_GPIO(x) or SET_GPIO_ALT(x,y)
 #define INP_GPIO(g) *(gpio + ((g) / 10)) &= ~(7 << (((g) % 10) * 3))
 #define OUT_GPIO(g) *(gpio + ((g) / 10)) |=  (1 << (((g) % 10) * 3))
-#define SET_GPIO_ALT(g,a) *(gpio + (((g) / 10))) |= (((a) <= 3 ? (a) + 4 : (a) == 4 ? 3 : 2) << (((g) % 10) * 3)) 
+#define SET_GPIO_ALT(g,a) *(gpio + (((g) / 10))) |= (((a) <= 3 ? (a) + 4 : (a) == 4 ? 3 : 2) << (((g) % 10) * 3))
 
 /*#define GPIOEDS_GET(g) (((*(gpio + 0x0040/4 + ((g) / 32))) & (1 << ((g) % 32) )) ? 1:0)
 //#define GPIOEDS_CLR(g) *(gpio + 0x0040/4 + ((g) / 32)) |= (1 << ((g) % 32) )
@@ -120,25 +120,25 @@ void gpio_shutdown() {
   close(mem_fd);
 }
 
-inline uint32_t gpio_word() {
+uint32_t gpio_word() {
   return gpio[13];
 }
 
-inline uint32_t gpio_set_input(uint32_t pin) {
+uint32_t gpio_set_input(uint32_t pin) {
   return INP_GPIO(pin);
 }
 
-inline uint32_t gpio_set_output(uint32_t pin) {
+uint32_t gpio_set_output(uint32_t pin) {
   INP_GPIO(pin);
   return OUT_GPIO(pin);
 }
 
-inline uint32_t gpio_alternate_function(uint32_t pin, uint32_t alternate) {
+uint32_t gpio_alternate_function(uint32_t pin, uint32_t alternate) {
   INP_GPIO(pin);
   return SET_GPIO_ALT(pin, alternate);
 }
 
-inline uint32_t gpio_set(uint32_t pins) {
+uint32_t gpio_set(uint32_t pins) {
   return GPIO_SET = pins;
 }
 
@@ -146,11 +146,11 @@ inline uint32_t gpio_clear(uint32_t pins) {
   return GPIO_CLR = pins;
 }
 
-inline int gpio_read(int port)
+int gpio_read(int port)
 {
 	return( (GPIO_GET & (1<<port)) ? 1 : 0);
 }
 
-inline uint32_t gpio_get(uint32_t pins) {
+uint32_t gpio_get(uint32_t pins) {
   return GPIO_GETBIT(pins);
 }
